@@ -31,6 +31,14 @@ jobs:
           custom_version: ${{ github.ref_name }}
           workflow_name: "Alfred-Common-Text-Operations"
 
+      - name: Get commit info
+        id: commit_info
+        run: |
+          echo "message=$(git log -1 --pretty=format:'%s')" >> $GITHUB_OUTPUT
+          echo "hash=$(git log -1 --pretty=format:'%H')" >> $GITHUB_OUTPUT
+          echo "author=$(git log -1 --pretty=format:'%an')" >> $GITHUB_OUTPUT
+          echo "date=$(git log -1 --pretty=format:'%ad' --date=short)" >> $GITHUB_OUTPUT
+
       - name: Create Release
         uses: softprops/action-gh-release@v1
         env:
@@ -41,19 +49,9 @@ jobs:
           body: |
             ## Alfred Common Text Operations ${{ github.ref_name }}
             
-            ### 功能特性
-            - 括号转换 (英文 ↔ 中文)
-            - 数字格式化 (千分位分隔符)
-            - LaTeX文本处理
-            - Markdown文本处理
-            - Mermaid代码处理
+            **Commit:** ${{ steps.commit_info.outputs.message }}
+            **Hash:** ${{ steps.commit_info.outputs.hash }}
+            **Author:** ${{ steps.commit_info.outputs.author }}
+            **Date:** ${{ steps.commit_info.outputs.date }}
             
-            ### 安装方法
-            1. 下载 `Alfred-Common-Text-Operations.alfredworkflow`
-            2. 双击文件安装到Alfred
-            3. 使用universal action 调用
-            
-            ### 更新日志
-            - 重构代码结构，提高可维护性
-            - 模块化设计，易于扩展
-            - 统一接口，更好的用户体验
+
