@@ -1,28 +1,51 @@
-# %%
+"""
+重构后的主入口文件
+使用WorkflowManager统一管理所有文本处理功能
+"""
+
 import os
 import sys
-from workflow import Workflow3
+import argparse
+from workflow_manager import WorkflowManager
 
-# %%
+
 def main(wf):
-
-    wf.add_item(title="括号转换(EN-CN)", arg="change_brackets(EN-CN)", valid=True)
-    wf.add_item(title="格式化千分数字", subtitle="convert 1932131 to 1,932,131", arg="format_thousand_separator", valid=True)
-    wf.add_item(title="移除LaTeX粗体命令", subtitle="将\\textbf{text}转换为text", arg="remove_textbf", valid=True)
-    wf.add_item(title="latex文本处理", arg="latex", valid=True)
-    wf.add_item(title="mermaid代码处理", arg="mermaid", valid=True)
-    wf.add_item(title="markdown文本处理", arg="markdown", valid=True)
-    wf.send_feedback()
+    """主函数 - 显示主菜单"""
+    manager = WorkflowManager()
+    manager.show_main_menu()
 
 
-
-if __name__ == u"__main__":
-
-    # inputs = sys.argv
-    # print("hello, this is argv:", inputs, file=sys.stderr)
-
-    wf = Workflow3()
-    sys.exit(wf.run(main))
+def handle_query():
+    """处理查询 - 根据动作参数执行相应的处理"""
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--action", type=str, required=True)
+    args = parser.parse_args()
     
+    # 获取输入文本
+    text = os.environ.get("text", "")
+    
+    # 创建Workflow管理器并处理动作
+    manager = WorkflowManager()
+    result = None
+    try:
+        result = manager.handle_action(args.action, text)
+    except Exception as e:
+        manager.wf.notify("处理失败", str(e))
+        return
+    
+    print(result)
+    manager.wf.notify("Processed successfully", result)
 
 
+if __name__ == "__main__":
+    # 检查是否有命令行参数
+    if len(sys.argv) > 1:
+        # 有参数时，执行查询处理
+        handle_query()
+    else:
+        # 无参数时，显示主菜单
+        from workflow import Workflow3
+        wf = Workflow3()
+        sys.exit(wf.run(main)) 
+        
+        

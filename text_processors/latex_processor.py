@@ -1,0 +1,78 @@
+"""
+LaTeX文本处理器
+处理LaTeX相关的文本转换
+"""
+
+import re
+from .base import TextProcessor
+
+
+class LatexProcessor(TextProcessor):
+    """LaTeX文本处理器"""
+    
+    def __init__(self):
+        super().__init__(
+            name="LaTeX文本处理",
+            description="处理LaTeX相关的文本转换"
+        )
+    
+    def remove_textbf(self, text: str) -> str:
+        """
+        移除LaTeX中的\textbf{}命令，保留其中的内容
+        
+        Args:
+            text: 输入的文本
+            
+        Returns:
+            处理后的文本
+        """
+        # 匹配\textbf{...}模式，其中...是任意非大括号字符或嵌套的大括号
+        pattern = r'\\textbf\{([^{}]*(?:\{[^{}]*\}[^{}]*)*)\}'
+        
+        def replace_textbf(match):
+            # 返回\textbf{}中的内容
+            return match.group(1)
+        
+        return re.sub(pattern, replace_textbf, text)
+    
+    def remove_cite(self, text: str) -> str:
+        """
+        移除LaTeX中的引用命令
+        
+        Args:
+            text: 输入的文本
+            
+        Returns:
+            处理后的文本
+        """
+        # 移除 ~\cite{...} 模式
+        pattern = r'~\\cite\{[^{}]+\}'
+        return re.sub(pattern, "", text)
+    
+    def process(self, text: str) -> str:
+        """
+        处理LaTeX文本（默认移除\textbf{}）
+        
+        Args:
+            text: 输入的文本
+            
+        Returns:
+            处理后的文本
+        """
+        return self.remove_textbf(text)
+    
+    def get_menu_items(self) -> list:
+        """获取菜单项"""
+        return [
+            {
+                "title": "移除LaTeX粗体命令",
+                "subtitle": "将\\textbf{text}转换为text",
+                "arg": "remove_textbf",
+                "valid": True
+            },
+            {
+                "title": "latex文本处理",
+                "arg": "latex",
+                "valid": True
+            }
+        ] 
