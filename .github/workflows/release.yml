@@ -47,9 +47,11 @@ jobs:
           files: ${{ steps.builder.outputs.workflow_file }}
           name: Release ${{ github.ref_name }}
           body: |
-            ## Alfred Common Text Operations ${{ github.ref_name }}
+            # Alfred Common Text Operations ${{ github.ref_name }}
             
-            **Commit:** ${{ steps.commit_info.outputs.message }}
+            ${{ steps.commit_info.outputs.message }}
+
+            
             **Hash:** ${{ steps.commit_info.outputs.hash }}
             **Author:** ${{ steps.commit_info.outputs.author }}
             **Date:** ${{ steps.commit_info.outputs.date }}
