@@ -51,6 +51,14 @@ class NumberFormatter(TextProcessor):
         pattern = r'\b\d+(?:\.\d+)?\b'
         return re.sub(pattern, add_commas, text)
     
+    def process_with_arg(self, text: str, arg: str) -> str:
+        """
+        根据参数处理文本
+        """
+        if arg == "format_thousand_separator":
+            return self.process(text)
+        return text
+    
     def get_menu_items(self) -> list:
         """获取菜单项"""
         return [{
@@ -59,3 +67,6 @@ class NumberFormatter(TextProcessor):
             "arg": "format_thousand_separator",
             "valid": True
         }] 
+        
+        
+        

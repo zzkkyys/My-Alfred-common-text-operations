@@ -46,6 +46,14 @@ class MarkdownProcessor(TextProcessor):
         """
         return self.convert_math_delimiters(text)
     
+    def process_with_arg(self, text: str, arg: str) -> str:
+        """
+        根据参数处理文本
+        """
+        if arg == "markdown-replace-math-indicator":
+            return self.convert_math_delimiters(text)
+        return text
+    
     def get_menu_items(self) -> list:
         """获取菜单项"""
         return [
@@ -53,11 +61,6 @@ class MarkdownProcessor(TextProcessor):
                 "title": "替换数学公式中的indicator",
                 "subtitle": "将\\[ \\]替换为$$",
                 "arg": "markdown-replace-math-indicator",
-                "valid": True
-            },
-            {
-                "title": "markdown文本处理",
-                "arg": "markdown",
                 "valid": True
             }
         ] 

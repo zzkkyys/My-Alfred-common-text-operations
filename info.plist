@@ -239,7 +239,7 @@ exit 1
 			<key>config</key>
 			<dict>
 				<key>argument</key>
-				<string>select text</string>
+				<string>select action</string>
 				<key>passthroughargument</key>
 				<false/>
 				<key>variables</key>

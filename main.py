@@ -7,7 +7,7 @@ import os
 import sys
 import argparse
 from workflow_manager import WorkflowManager
-
+from workflow.notify import notify
 
 def main(wf):
     """主函数 - 显示主菜单"""
@@ -30,11 +30,11 @@ def handle_query():
     try:
         result = manager.handle_action(args.action, text)
     except Exception as e:
-        manager.wf.notify("处理失败", str(e))
+        notify("处理失败", str(e))
         return
     
     print(result)
-    manager.wf.notify("Processed successfully", result)
+    notify("Processed successfully", result)
 
 
 if __name__ == "__main__":

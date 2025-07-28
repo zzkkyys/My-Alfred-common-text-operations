@@ -16,6 +16,7 @@ class MermaidProcessor(TextProcessor):
             description="处理Mermaid图表相关的文本转换"
         )
     
+    
     def add_quotes_to_nodes(self, text: str) -> str:
         """
         为Mermaid节点添加引号
@@ -42,17 +43,21 @@ class MermaidProcessor(TextProcessor):
         """
         return self.add_quotes_to_nodes(text)
     
+    
+    def process_with_arg(self, text: str, arg: str) -> str:
+        """
+        根据参数处理文本
+        """
+        if arg == "mermaid-quote":
+            return self.add_quotes_to_nodes(text)
+        return text
+    
     def get_menu_items(self) -> list:
         """获取菜单项"""
         return [
             {
                 "title": '使用""将cell里的文字括起来',
                 "arg": "mermaid-quote",
-                "valid": True
-            },
-            {
-                "title": "mermaid代码处理",
-                "arg": "mermaid",
                 "valid": True
             }
         ] 

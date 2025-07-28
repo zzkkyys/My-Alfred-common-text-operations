@@ -52,7 +52,7 @@ class WorkflowManager:
         for processor in self.processors.values():
             for item in processor.get_menu_items():
                 if item['arg'] == action:
-                    result = processor.process(text)
+                    result = processor.process_with_arg(text, arg=item['arg'])
                     return result
                 
         return None

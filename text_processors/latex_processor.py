@@ -61,6 +61,16 @@ class LatexProcessor(TextProcessor):
         """
         return self.remove_textbf(text)
     
+    def process_with_arg(self, text: str, arg: str) -> str:
+        """
+        根据参数处理文本
+        """
+        if arg == "remove_textbf":
+            return self.process(text)
+        elif arg == "remove_cite":
+            return self.remove_cite(text)
+        return text
+    
     def get_menu_items(self) -> list:
         """获取菜单项"""
         return [
@@ -71,8 +81,9 @@ class LatexProcessor(TextProcessor):
                 "valid": True
             },
             {
-                "title": "latex文本处理",
-                "arg": "latex",
+                "title": "移除LaTeX引用命令",
+                "subtitle": "将~\\cite{...}转换为空",
+                "arg": "remove_cite",
                 "valid": True
             }
         ] 

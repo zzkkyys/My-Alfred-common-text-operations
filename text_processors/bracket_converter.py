@@ -37,10 +37,21 @@ class BracketConverter(TextProcessor):
         
         return converted_text
     
+    def process_with_arg(self, text: str, arg: str) -> str:
+        """
+        根据参数处理文本
+        """
+        if arg == "change_brackets(EN-CN)":
+            return self.process(text)
+        return text
+    
     def get_menu_items(self) -> list:
         """获取菜单项"""
         return [{
             "title": self.name,
+            "subtitle": self.description,
             "arg": "change_brackets(EN-CN)",
             "valid": True
         }] 
+        
+        
