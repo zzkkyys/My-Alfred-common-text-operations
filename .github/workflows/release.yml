@@ -46,5 +46,3 @@ jobs:
             - 重构代码结构，提高可维护性
             - 模块化设计，易于扩展
             - 统一接口，更好的用户体验
-        draft: false
-        prerelease: false
