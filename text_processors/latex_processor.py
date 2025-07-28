@@ -71,19 +71,21 @@ class LatexProcessor(TextProcessor):
             return self.remove_cite(text)
         return text
     
-    def get_menu_items(self) -> list:
+    def get_menu_items(self, text: str = "") -> list:
         """获取菜单项"""
         return [
             {
                 "title": "移除LaTeX粗体命令",
                 "subtitle": "将\\textbf{text}转换为text",
                 "arg": "remove_textbf",
-                "valid": True
+                "valid": True,
+                "quicklookurl": self.process(text)
             },
             {
                 "title": "移除LaTeX引用命令",
                 "subtitle": "将~\\cite{...}转换为空",
                 "arg": "remove_cite",
-                "valid": True
+                "valid": True,
+                "quicklookurl": self.remove_cite(text)
             }
         ] 

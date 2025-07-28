@@ -59,13 +59,14 @@ class NumberFormatter(TextProcessor):
             return self.process(text)
         return text
     
-    def get_menu_items(self) -> list:
+    def get_menu_items(self, text: str = "") -> list:
         """获取菜单项"""
         return [{
             "title": self.name,
             "subtitle": "convert 1932131 to 1,932,131",
             "arg": "format_thousand_separator",
-            "valid": True
+            "valid": True,
+            "quicklookurl": self.process(text)
         }] 
         
         

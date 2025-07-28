@@ -45,13 +45,14 @@ class BracketConverter(TextProcessor):
             return self.process(text)
         return text
     
-    def get_menu_items(self) -> list:
+    def get_menu_items(self, text: str = "") -> list:
         """获取菜单项"""
         return [{
             "title": self.name,
             "subtitle": self.description,
             "arg": "change_brackets(EN-CN)",
-            "valid": True
+            "valid": True,
+            "quicklookurl": self.process(text)
         }] 
         
         

@@ -28,7 +28,7 @@ class TextProcessor(ABC):
         pass
     
     @abstractmethod
-    def get_menu_items(self) -> list:
+    def get_menu_items(self, text: str = "") -> list:
         """
         获取菜单项列表
         

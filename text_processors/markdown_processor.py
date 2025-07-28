@@ -54,13 +54,14 @@ class MarkdownProcessor(TextProcessor):
             return self.convert_math_delimiters(text)
         return text
     
-    def get_menu_items(self) -> list:
+    def get_menu_items(self, text: str = "") -> list:
         """获取菜单项"""
         return [
             {
                 "title": "替换数学公式中的indicator",
                 "subtitle": "将\\[ \\]替换为$$",
                 "arg": "markdown-replace-math-indicator",
-                "valid": True
+                "valid": True,
+                "quicklookurl": self.convert_math_delimiters(text)
             }
         ] 

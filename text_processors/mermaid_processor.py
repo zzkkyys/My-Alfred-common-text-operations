@@ -52,12 +52,13 @@ class MermaidProcessor(TextProcessor):
             return self.add_quotes_to_nodes(text)
         return text
     
-    def get_menu_items(self) -> list:
+    def get_menu_items(self, text: str = "") -> list:
         """获取菜单项"""
         return [
             {
                 "title": '使用""将cell里的文字括起来',
                 "arg": "mermaid-quote",
-                "valid": True
+                "valid": True,
+                "quicklookurl": self.add_quotes_to_nodes(text)
             }
         ] 

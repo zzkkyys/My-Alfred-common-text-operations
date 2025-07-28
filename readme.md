@@ -2,6 +2,12 @@
 
 一个功能丰富的Alfred workflow，用于处理各种文本转换和格式化操作。
 
+如果安装了[alfred-extra-pane](https://github.com/mr-pennyworth/alfred-extra-pane?tab=readme-ov-file)，那么可以预览处理结果。
+
+！！请设置python_paths
+
+
+
 ## 1. 功能特性
 
 ### 🔤 基础文本处理

@@ -12,7 +12,9 @@ from workflow.notify import notify
 def main(wf):
     """主函数 - 显示主菜单"""
     manager = WorkflowManager()
-    manager.show_main_menu()
+    text = os.environ.get("text", "")
+    
+    manager.show_main_menu(text)
 
 
 def handle_query():

@@ -9,6 +9,7 @@ from .number_formatter import NumberFormatter
 from .latex_processor import LatexProcessor
 from .markdown_processor import MarkdownProcessor
 from .mermaid_processor import MermaidProcessor
+from .text_diff import TextDiffProcessor
 
 __all__ = [
     'TextProcessor',
@@ -16,5 +17,6 @@ __all__ = [
     'NumberFormatter',
     'LatexProcessor',
     'MarkdownProcessor',
-    'MermaidProcessor'
+    'MermaidProcessor',
+    'TextDiffProcessor'
 ] 
