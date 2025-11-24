@@ -4,7 +4,7 @@
 """
 
 from .base import TextProcessor
-from .bracket_converter import BracketConverter
+from .common_converter import CommonConverter
 from .number_formatter import NumberFormatter
 from .latex_processor import LatexProcessor
 from .markdown_processor import MarkdownProcessor
@@ -13,7 +13,7 @@ from .text_diff import TextDiffProcessor
 
 __all__ = [
     'TextProcessor',
-    'BracketConverter', 
+    'CommonConverter', 
     'NumberFormatter',
     'LatexProcessor',
     'MarkdownProcessor',

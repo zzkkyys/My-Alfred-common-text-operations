@@ -9,7 +9,7 @@ import sys
 from typing import Dict, List, Optional
 from workflow import Workflow3
 from text_processors import (
-    BracketConverter,
+    CommonConverter,
     NumberFormatter,
     LatexProcessor,
     MarkdownProcessor,
@@ -29,7 +29,7 @@ class WorkflowManager:
     def _init_processors(self) -> Dict[str, object]:
         """初始化所有文本处理器"""
         return {
-            'bracket_converter': BracketConverter(),
+            'common_converter': CommonConverter(),
             'number_formatter': NumberFormatter(),
             'latex_processor': LatexProcessor(),
             'markdown_processor': MarkdownProcessor(),
