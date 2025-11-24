@@ -66,7 +66,8 @@ class NumberFormatter(TextProcessor):
             "subtitle": "convert 1932131 to 1,932,131",
             "arg": "format_thousand_separator",
             "valid": True,
-            "quicklookurl": self.process(text)
+            "quicklookurl": self.process(text),
+            "icon": "imgs/number.svg"
         }] 
         
         

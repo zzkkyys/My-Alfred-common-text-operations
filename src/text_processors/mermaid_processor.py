@@ -59,6 +59,7 @@ class MermaidProcessor(TextProcessor):
                 "title": '使用""将cell里的文字括起来',
                 "arg": "mermaid-quote",
                 "valid": True,
-                "quicklookurl": self.add_quotes_to_nodes(text)
+                "quicklookurl": self.add_quotes_to_nodes(text),
+                "icon": "imgs/mermaid.png"
             }
         ] 

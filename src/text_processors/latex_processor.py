@@ -79,13 +79,15 @@ class LatexProcessor(TextProcessor):
                 "subtitle": "将\\textbf{text}转换为text",
                 "arg": "remove_textbf",
                 "valid": True,
-                "quicklookurl": self.process(text)
+                "quicklookurl": self.process(text),
+                "icon": "imgs/texstudio.svg"
             },
             {
                 "title": "移除LaTeX引用命令",
                 "subtitle": "将~\\cite{...}转换为空",
                 "arg": "remove_cite",
                 "valid": True,
-                "quicklookurl": self.remove_cite(text)
+                "quicklookurl": self.remove_cite(text),
+                "icon": "imgs/texstudio.svg"
             }
         ] 

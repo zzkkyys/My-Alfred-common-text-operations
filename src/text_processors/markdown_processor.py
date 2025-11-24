@@ -62,6 +62,7 @@ class MarkdownProcessor(TextProcessor):
                 "subtitle": "将\\[ \\]替换为$$",
                 "arg": "markdown-replace-math-indicator",
                 "valid": True,
-                "quicklookurl": self.convert_math_delimiters(text)
+                "quicklookurl": self.convert_math_delimiters(text),
+                "icon": "imgs/markdown.svg"
             }
         ] 

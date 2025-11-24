@@ -54,7 +54,8 @@ class WorkflowManager:
                     subtitle=item.get('subtitle', ''),
                     arg=item['arg'],
                     valid=item.get('valid', True),
-                    quicklookurl=self.generate_quicklookurl(text=text, process_result=item.get('quicklookurl', '')) 
+                    quicklookurl=self.generate_quicklookurl(text=text, process_result=item.get('quicklookurl', '')),
+                    icon=item.get('icon', None)
                 )
         
         self.wf.send_feedback()
