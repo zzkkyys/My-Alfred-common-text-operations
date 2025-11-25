@@ -1,6 +1,6 @@
 """
 文本对比处理器
-生成原始文本和处理后文本的行级HTML对比
+生成原始文本和处理后文本的行级和字符级HTML对比
 """
 
 import difflib
@@ -11,25 +11,80 @@ import html
 class TextDiffProcessor:
     """文本对比处理器"""
     
+    def _highlight_char_diff(self, old_line: str, new_line: str) -> tuple:
+        """
+        高亮显示两行之间的字符级差异
+        
+        Args:
+            old_line: 原始行
+            new_line: 新行
+            
+        Returns:
+            (highlighted_old, highlighted_new) 元组
+        """
+        s = difflib.SequenceMatcher(None, old_line, new_line)
+        
+        old_parts = []
+        new_parts = []
+        
+        for tag, i1, i2, j1, j2 in s.get_opcodes():
+            old_text = html.escape(old_line[i1:i2])
+            new_text = html.escape(new_line[j1:j2])
+            
+            if tag == 'equal':
+                old_parts.append(old_text)
+                new_parts.append(new_text)
+            elif tag == 'replace':
+                old_parts.append(f'<span class="char-removed">{old_text}</span>')
+                new_parts.append(f'<span class="char-added">{new_text}</span>')
+            elif tag == 'delete':
+                old_parts.append(f'<span class="char-removed">{old_text}</span>')
+            elif tag == 'insert':
+                new_parts.append(f'<span class="char-added">{new_text}</span>')
+        
+        return ''.join(old_parts), ''.join(new_parts)
     
     def generate_html_diff_for_small_window(self, original_text: str, processed_text: str, title: str = "文本对比") -> str:
         original_lines = original_text.splitlines()
         processed_lines = processed_text.splitlines()
-        diff_lines = list(difflib.ndiff(original_lines, processed_lines))
-
+        
+        # 使用 SequenceMatcher 来配对行
+        s = difflib.SequenceMatcher(None, original_lines, processed_lines)
+        
         formatted_lines = []
-        for line in diff_lines:
-            prefix = line[0]
-            content = html.escape(line[2:])
-            if prefix == '+':
-                line_html = f'<div class="line added">+ {content}</div>'
-            elif prefix == '-':
-                line_html = f'<div class="line removed">- {content}</div>'
-            elif prefix == '?':
-                continue  # 忽略 ? 行，或你也可以突出显示
-            else:
-                line_html = f'<div class="line unchanged">  {content}</div>'
-            formatted_lines.append(line_html)
+        for tag, i1, i2, j1, j2 in s.get_opcodes():
+            if tag == 'equal':
+                # 未改变的行
+                for line in original_lines[i1:i2]:
+                    content = html.escape(line)
+                    line_html = f'<div class="line unchanged">  {content}</div>'
+                    formatted_lines.append(line_html)
+            elif tag == 'replace':
+                # 修改的行 - 显示字符级差异
+                for old_line, new_line in zip(original_lines[i1:i2], processed_lines[j1:j2]):
+                    old_highlighted, new_highlighted = self._highlight_char_diff(old_line, new_line)
+                    formatted_lines.append(f'<div class="line removed">- {old_highlighted}</div>')
+                    formatted_lines.append(f'<div class="line added">+ {new_highlighted}</div>')
+                
+                # 处理行数不匹配的情况
+                if i2 - i1 > j2 - j1:
+                    for line in original_lines[i1 + (j2 - j1):i2]:
+                        content = html.escape(line)
+                        formatted_lines.append(f'<div class="line removed">- {content}</div>')
+                elif j2 - j1 > i2 - i1:
+                    for line in processed_lines[j1 + (i2 - i1):j2]:
+                        content = html.escape(line)
+                        formatted_lines.append(f'<div class="line added">+ {content}</div>')
+            elif tag == 'delete':
+                # 删除的行
+                for line in original_lines[i1:i2]:
+                    content = html.escape(line)
+                    formatted_lines.append(f'<div class="line removed">- {content}</div>')
+            elif tag == 'insert':
+                # 新增的行
+                for line in processed_lines[j1:j2]:
+                    content = html.escape(line)
+                    formatted_lines.append(f'<div class="line added">+ {content}</div>')
 
         return f"""<!DOCTYPE html>
     <html lang="zh-CN">
@@ -59,6 +114,15 @@ class TextDiffProcessor:
             }}
             .unchanged {{
                 color: #586069;
+            }}
+            .char-added {{
+                background: #acf2bd;
+                font-weight: bold;
+            }}
+            .char-removed {{
+                background: #fdb8c0;
+                font-weight: bold;
+                text-decoration: line-through;
             }}
             .title {{
                 font-weight: bold;
