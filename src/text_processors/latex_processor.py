@@ -49,6 +49,20 @@ class LatexProcessor(TextProcessor):
         pattern = r'~\\cite\{[^{}]+\}'
         return re.sub(pattern, "", text)
     
+    def escape_percent(self, text: str) -> str:
+        r"""
+        将数字后面的%转换为\%
+        
+        Args:
+            text: 输入的文本
+            
+        Returns:
+            处理后的文本
+        """
+        # 匹配数字后面的%，但不匹配已经转义的\%
+        pattern = r'(\d)%(?!\\)'
+        return re.sub(pattern, r'\1\\%', text)
+    
     def process(self, text: str) -> str:
         """
         处理LaTeX文本（默认移除\textbf{}）
@@ -69,6 +83,8 @@ class LatexProcessor(TextProcessor):
             return self.process(text)
         elif arg == "remove_cite":
             return self.remove_cite(text)
+        elif arg == "escape_percent":
+            return self.escape_percent(text)
         return text
     
     def get_menu_items(self, text: str = "") -> list:
@@ -88,6 +104,14 @@ class LatexProcessor(TextProcessor):
                 "arg": "remove_cite",
                 "valid": True,
                 "quicklookurl": self.remove_cite(text),
+                "icon": "imgs/texstudio.svg"
+            },
+            {
+                "title": "转义百分号",
+                "subtitle": "将数字后的%转换为\\%",
+                "arg": "escape_percent",
+                "valid": True,
+                "quicklookurl": self.escape_percent(text),
                 "icon": "imgs/texstudio.svg"
             }
         ] 
