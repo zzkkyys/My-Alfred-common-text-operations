@@ -15,6 +15,19 @@ class LatexProcessor(TextProcessor):
             name="LaTeX文本处理",
             description="处理LaTeX相关的文本转换"
         )
+        
+    def process(self, text: str) -> str:
+        """
+        处理LaTeX文本（默认移除\textbf{}）
+        
+        Args:
+            text: 输入的文本
+            
+        Returns:
+            处理后的文本
+        """
+        return self.remove_textbf(text)
+    
     
     def remove_textbf(self, text: str) -> str:
         """
@@ -34,6 +47,24 @@ class LatexProcessor(TextProcessor):
             return match.group(1)
         
         return re.sub(pattern, replace_textbf, text)
+    
+    def remove_textit(self, text: str) -> str:
+        """
+        移除LaTeX中的\textit{}命令，保留其中的内容
+        
+        Args:
+            text: 输入的文本
+            
+        Returns:
+            处理后的文本
+        """
+        # 匹配\textit{...}模式
+        pattern = r'\\textit\{([^{}]*(?:\{[^{}]*\}[^{}]*)*)\}'
+        
+        def replace_textit(match):
+            return match.group(1)
+        
+        return re.sub(pattern, replace_textit, text)
     
     def remove_cite(self, text: str) -> str:
         """
@@ -81,9 +112,9 @@ class LatexProcessor(TextProcessor):
         result = re.sub(r'\([^)]*\)', '', result)
         return result
     
-    def process(self, text: str) -> str:
-        """
-        处理LaTeX文本（默认移除\textbf{}）
+    def section_to_paragraph(self, text: str) -> str:
+        r"""
+        将\section{}, \subsection{}, \subsubsection{}转换为\paragraph{}~\\
         
         Args:
             text: 输入的文本
@@ -91,7 +122,25 @@ class LatexProcessor(TextProcessor):
         Returns:
             处理后的文本
         """
-        return self.remove_textbf(text)
+        # 匹配 \section{...}, \subsection{...}, \subsubsection{...}
+        pattern = r'\\(sub)*section\{([^{}]*)\}'
+        result = re.sub(pattern, r'\\paragraph{\2}~\\\\', text)
+        return result
+    
+    def itemize_to_enumerate(self, text: str) -> str:
+        r"""
+        将\begin{itemize}转换为\begin{enumerate}[label=\arabic*)]
+        将\end{itemize}转换为\end{enumerate}
+        
+        Args:
+            text: 输入的文本
+            
+        Returns:
+            处理后的文本
+        """
+        result = re.sub(r'\\begin\{itemize\}', r'\\begin{enumerate}[label=\\arabic*)]', text)
+        result = re.sub(r'\\end\{itemize\}', r'\\end{enumerate}', result)
+        return result
     
     def process_with_arg(self, text: str, arg: str) -> str:
         """
@@ -99,13 +148,20 @@ class LatexProcessor(TextProcessor):
         """
         if arg == "remove_textbf":
             return self.process(text)
+        elif arg == "remove_textit":
+            return self.remove_textit(text)
         elif arg == "remove_cite":
             return self.remove_cite(text)
         elif arg == "escape_percent":
             return self.escape_percent(text)
         elif arg == "remove_bold_and_parentheses":
             return self.remove_bold_and_parentheses(text)
-        return text
+        elif arg == "section_to_paragraph":
+            return self.section_to_paragraph(text)
+        elif arg == "itemize_to_enumerate":
+            return self.itemize_to_enumerate(text)
+        return self.remove_textbf(text)
+    
     
     def get_menu_items(self, text: str = "") -> list:
         """获取菜单项"""
@@ -116,6 +172,14 @@ class LatexProcessor(TextProcessor):
                 "arg": "remove_textbf",
                 "valid": True,
                 "quicklookurl": self.process(text),
+                "icon": "imgs/texstudio.svg"
+            },
+            {
+                "title": "移除LaTeX斜体命令",
+                "subtitle": "将\\textit{text}转换为text",
+                "arg": "remove_textit",
+                "valid": True,
+                "quicklookurl": self.remove_textit(text),
                 "icon": "imgs/texstudio.svg"
             },
             {
@@ -141,5 +205,21 @@ class LatexProcessor(TextProcessor):
                 "valid": True,
                 "quicklookurl": self.remove_bold_and_parentheses(text),
                 "icon": "imgs/texstudio.svg"
+            },
+            {
+                "title": "章节转段落",
+                "subtitle": "将\\section{}等转换为\\paragraph{}~\\\\",
+                "arg": "section_to_paragraph",
+                "valid": True,
+                "quicklookurl": self.section_to_paragraph(text),
+                "icon": "imgs/texstudio.svg"
+            },
+            {
+                "title": "无序列表转有序列表",
+                "subtitle": "将itemize转换为enumerate[label=\\arabic*)]",
+                "arg": "itemize_to_enumerate",
+                "valid": True,
+                "quicklookurl": self.itemize_to_enumerate(text),
+                "icon": "imgs/texstudio.svg"
             }
-        ] 
+        ]      

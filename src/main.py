@@ -25,6 +25,8 @@ def handle_query():
     
     # 获取输入文本
     text = os.environ.get("text", "")
+    print("Received text: ", text, file=sys.stderr)
+    
     
     # 创建Workflow管理器并处理动作
     manager = WorkflowManager()
@@ -35,8 +37,11 @@ def handle_query():
         notify("处理失败", str(e))
         return
     
+    print("处理成功, ", result, file=sys.stderr)
+    
     print(result)
-    notify("Processed successfully", result)
+    
+    # notify("Processed successfully", result)
 
 
 if __name__ == "__main__":
